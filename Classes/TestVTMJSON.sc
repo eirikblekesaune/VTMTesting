@@ -2,9 +2,9 @@ TestVTMJSON : VTMUnitTest {
 
 	test_SingleValues{
 		[
-			Float.makeRandom32Bits,
-			Float.makeRandom64Bits,
-			Integer.makeRandom32Bits
+			Float.generateRandom32Bits,
+			Float.generateRandom64Bits,
+			Integer.generateRandom32Bits
 		].do({arg testValue;
 			this.assertEquals(
 				testValue,
@@ -17,9 +17,9 @@ TestVTMJSON : VTMUnitTest {
 	test_CollectionsOfSingleValues{
 		[Array, List].do({arg class;
 			[
-				{Float.makeRandom32Bits},
-				{Float.makeRandom64Bits},
-				{Integer.makeRandom32Bits}
+				{Float.generateRandom32Bits},
+				{Float.generateRandom64Bits},
+				{Integer.generateRandom32Bits}
 			].collect(_ ! 10).as(class).do({arg testValue;
 				this.assertEquals(
 					testValue,

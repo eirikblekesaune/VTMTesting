@@ -1,16 +1,16 @@
 TestVTMStringValue : TestVTMValue {
 
-	*makeRandomValue{arg params;
-		^this.makeRandomString(params);
+	*generateRandomValue{arg params;
+		^this.generateRandomString(params);
 	}
 
-	*makeRandomProperty{arg key, params;
+	*generateRandomProperty{arg key, params;
 		var result;
-		result = super.makeRandomProperty(key, params);
+		result = super.generateRandomProperty(key, params);
 		if(result.isNil, {
 			switch(key,
-				\pattern, { result = this.makeRandomString(params); },
-				\matchPattern, { result = this.makeRandomBoolean(params); }
+				\pattern, { result = this.generateRandomString(params); },
+				\matchPattern, { result = this.generateRandomBoolean(params); }
 			);
 		});
 		^result;

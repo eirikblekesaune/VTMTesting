@@ -1,7 +1,7 @@
 TestVTMBooleanValue : TestVTMValue {
 
-	*makeRandomValue{arg params;
-		^this.makeRandomBoolean(params);
+	*generateRandomValue{arg params;
+		^this.generateRandomBoolean(params);
 	}
 
 	test_ToggleInvertsValue{

@@ -13,14 +13,14 @@ TestVTMElement : TestVTMAbstractData {
 		];
 	}
 
-	*makeRandomDeclaration{arg params;
+	*generateRandomDeclaration{arg params;
 		var result;
-		result = super.makeRandomDeclaration(params);
-		result.putAll(this.makeRandomAttributes(params));
+		result = super.generateRandomDeclaration(params);
+		result.putAll(this.generateRandomAttributes(params));
 		^result;
 	}
 
-	*makeRandomAttributes{arg params;
+	*generateRandomAttributes{arg params;
 		^VTMOrderedIdentityDictionary.new;
 	}
 
@@ -28,13 +28,13 @@ TestVTMElement : TestVTMAbstractData {
 		var obj, testDeclaration, managerObj;
 		this.class.classesForTesting.do({arg class;
 			var testClass = VTMUnitTest.findTestClass(class);
-			var testName = VTMUnitTest.makeRandomSymbol;
+			var testName = VTMUnitTest.generateRandomSymbol;
 			var managerClass = class.managerClass;
 			var testPath;
 
 			managerObj = managerClass.new;
 
-			testDeclaration = testClass.makeRandomParameters;
+			testDeclaration = testClass.generateRandomParameters;
 			obj = class.new(
 				testName,
 				testDeclaration,
@@ -73,9 +73,9 @@ TestVTMElement : TestVTMAbstractData {
 		var obj, testDeclaration;
 		this.class.classesForTesting.do({arg class;
 			var testClass = VTMUnitTest.findTestClass(class);
-			var testName = VTMUnitTest.makeRandomSymbol;
+			var testName = VTMUnitTest.generateRandomSymbol;
 
-			testDeclaration = testClass.makeRandomDeclaration;
+			testDeclaration = testClass.generateRandomDeclaration;
 			obj = class.new(
 				testName,
 				testDeclaration
@@ -88,7 +88,7 @@ TestVTMElement : TestVTMAbstractData {
 				oldVal = obj.get(declarationKey);
 				attrPath = (obj.fullPath ++ '/' ++ declarationKey).asSymbol;
 
-				testVal = testClass.makeRandomParameter(declarationKey);
+				testVal = testClass.generateRandomParameter(declarationKey);
 				oscValReceived.test = false;
 				controller = SimpleController(obj).put(\declaration, {arg ...args;
 					var who, what, whichAttr;

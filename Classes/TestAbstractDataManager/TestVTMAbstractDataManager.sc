@@ -10,7 +10,7 @@ TestVTMAbstractDataManager : VTMUnitTest {
 	//declaration array size defines the number of data item declaration
 	//that are made.
 
-	*makeRandomDeclaration{arg settings ...args;
+	*generateRandomDeclaration{arg settings ...args;
 		var result;
 		var numItems;
 		if(settings.isNil, {
@@ -22,8 +22,8 @@ TestVTMAbstractDataManager : VTMUnitTest {
 		});
 		result = numItems.collect({arg i;
 			[
-				[i + 1, {this.makeRandomString}].choose.value,
-				this.dataTestClass.makeRandomDeclaration(*args)
+				[i + 1, {this.generateRandomString}].choose.value,
+				this.dataTestClass.generateRandomDeclaration(*args)
 			]
 		}).flatten;
 		^result;

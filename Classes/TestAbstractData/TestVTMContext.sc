@@ -1,7 +1,7 @@
 TestVTMContext : TestVTMElement {
 
-	*makeRandomContext{arg params;
-		var context, name = this.makeRandomString;
+	*generateRandomContext{arg params;
+		var context, name = this.generateRandomString;
 		var parameterDeclaration;
 		var definition, declaration;
 		var numParameters = rrand(3,8);
@@ -9,7 +9,7 @@ TestVTMContext : TestVTMElement {
 		var parent;
 		params !? { parent = params.at(\parent) };
 		parameterDeclaration = numParameters.collect({arg i;
-			TestVTMParameter.makeRandomDeclaration(
+			TestVTMParameter.generateRandomDeclaration(
 				[\integer, \decimal, \string, \boolean].choose
 			).put(\action, {|p|
 				parameterValues[i] = p.value;
@@ -19,7 +19,7 @@ TestVTMContext : TestVTMElement {
 			~parameters = parameterDeclaration;
 		};
 		declaration = (
-			path: "/%".format(this.makeRandomString).asSymbol
+			path: "/%".format(this.generateRandomString).asSymbol
 		);
 		context = VTMContext(name, definition, declaration, parent);
 		^context;
@@ -28,7 +28,7 @@ TestVTMContext : TestVTMElement {
 	test_DefaultConstruction{
 		var context, testName;
 		//construct without definition and declaration
-		testName = this.class.makeRandomString.asSymbol;
+		testName = this.class.generateRandomString.asSymbol;
 		context = VTMContext(testName);
 		this.assertEquals(
 			context.name, testName,
@@ -79,19 +79,19 @@ TestVTMContext : TestVTMElement {
 		var paramsAttr, cuesAttr, mappingsAttr;
 		var scoresAttr, commandsAttr;
 		//Construct with definition and declaration
-		testName = this.class.makeRandomString.asSymbol;
+		testName = this.class.generateRandomString.asSymbol;
 		definition = Environment[];
 		paramsAttr = TestVTMParameterManager.makeTestDeclaration;
-		commandsAttr = TestVTMCommandManager.makeRandomDeclaration(paramsAttr);
-		mappingsAttr = TestVTMMappingManager.makeRandomDeclaration(paramsAttr, commandsAttr);
+		commandsAttr = TestVTMCommandManager.generateRandomDeclaration(paramsAttr);
+		mappingsAttr = TestVTMMappingManager.generateRandomDeclaration(paramsAttr, commandsAttr);
 
-		cuesAttr = TestVTMCueManager.makeRandomDeclaration(paramsAttr, commandsAttr);
-		scoresAttr = TestVTMScoreManager.makeRandomDeclaration(
+		cuesAttr = TestVTMCueManager.generateRandomDeclaration(paramsAttr, commandsAttr);
+		scoresAttr = TestVTMScoreManager.generateRandomDeclaration(
 			paramsAttr, commandsAttr, mappingsAttr, cuesAttr
 		);
 
 		declaration = (
-			path: "/%".format(this.class.makeRandomString).asSymbol,
+			path: "/%".format(this.class.generateRandomString).asSymbol,
 			parameters: paramsAttr,
 			cues: cuesAttr,
 			mappings: mappingsAttr,
@@ -130,7 +130,7 @@ TestVTMContext : TestVTMElement {
 				result[\definitionFunction][\args].put(runtimeStep, args);
 			});
 		});
-		name = this.class.makeRandomString.asSymbol;
+		name = this.class.generateRandomString.asSymbol;
 		context = VTMContext(name, definition);
 		//add dependant for observing state changes
 		controller = SimpleController.new(context);
@@ -211,13 +211,13 @@ TestVTMContext : TestVTMElement {
 	}
 
 	test_initParametersAndPresets{
-		var context, name = this.class.makeRandomString;
+		var context, name = this.class.generateRandomString;
 		var parameterDeclaration;
 		var definition, declaration;
 		var numParameters = rrand(3,8);
 		var parameterValues = Array.newClear(numParameters);
 		parameterDeclaration = numParameters.collect({arg i;
-			TestVTMParameter.makeRandomDeclaration(
+			TestVTMParameter.generateRandomDeclaration(
 				[\integer, \decimal, \string, \boolean].choose
 			).put(\action, {|p|
 				parameterValues[i] = p.value;
@@ -227,7 +227,7 @@ TestVTMContext : TestVTMElement {
 			~parameters = parameterDeclaration;
 		};
 		declaration = (
-			path: "/%".format(this.class.makeRandomString).asSymbol
+			path: "/%".format(this.class.generateRandomString).asSymbol
 		);
 		context = VTMContext(name, definition, declaration);
 		context.prepare;
@@ -263,11 +263,11 @@ TestVTMContext : TestVTMElement {
 	test_OSCCommunication{
 		var context;
 		var subContexts;
-		context = this.class.makeRandomContext;
+		context = this.class.generateRandomContext;
 		context.prepare;
 
 		subContexts = 4.collect({arg i;
-			this.class.makeRandomContext((parent: context));
+			this.class.generateRandomContext((parent: context));
 		});
 
 		//startingOSC
@@ -399,7 +399,7 @@ TestVTMContext : TestVTMElement {
 
 	test_addingChildContexts{
 		var rootData;
-		rootData = IdentityDictionary[\name -> this.class.makeRandomString];
+		rootData = IdentityDictionary[\name -> this.class.generateRandomString];
 
 		rootData.put(\obj, VTMContext(rootData[\name]));
 
@@ -419,7 +419,7 @@ TestVTMContext : TestVTMElement {
 		);
 
 		rootData.put(\children, {
-			var childName = this.class.makeRandomString;
+			var childName = this.class.generateRandomString;
 			IdentityDictionary[
 				\name -> childName,
 				\obj -> VTMContext(childName, parent: rootData[\obj]);
@@ -428,7 +428,7 @@ TestVTMContext : TestVTMElement {
 
 		rootData[\children].do({arg childData;
 			childData.put(\children, {
-				var grandChildName = this.class.makeRandomString;
+				var grandChildName = this.class.generateRandomString;
 				IdentityDictionary[
 					\name -> grandChildName,
 					\obj -> VTMContext(grandChildName, parent: childData[\obj])

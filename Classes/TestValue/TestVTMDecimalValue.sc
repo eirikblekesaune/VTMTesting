@@ -1,7 +1,7 @@
 TestVTMDecimalValue : TestVTMNumberValue {
 
-	*makeRandomValue{arg params;
-		^this.makeRandomDecimal(params);
+	*generateRandomValue{arg params;
+		^this.generateRandomDecimal(params);
 	}
 
 	setUp{

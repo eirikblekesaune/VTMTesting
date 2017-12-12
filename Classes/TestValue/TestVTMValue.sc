@@ -1,17 +1,17 @@
 TestVTMValue : VTMUnitTest {
 	*classesForTesting{
 		^[
-			VTMNoneValue,
+			//VTMNoneValue,
 			VTMBooleanValue,
-			VTMStringValue,
-			VTMDecimalValue,
-			VTMIntegerValue,
-			VTMTimecodeValue,
-			VTMListValue,
-			VTMDictionaryValue,
-			VTMArrayValue,
-			VTMSchemaValue,
-			VTMTupleValue
+//			VTMStringValue,
+//			VTMDecimalValue,
+//			VTMIntegerValue,
+//			VTMTimecodeValue,
+//			VTMListValue,
+//			VTMDictionaryValue,
+//			VTMArrayValue,
+//			VTMSchemaValue,
+//			VTMTupleValue
 		];
 	}
 
@@ -23,72 +23,71 @@ TestVTMValue : VTMUnitTest {
 		^this.classesForTesting.collect(_.type);
 	}
 
-	*makeRandomPropertiesOLD{arg properties;
-		var result = VTMValueProperties.new;
-		if(properties.notNil, {
-			properties.do({arg item;
-				if(item.isKindOf(Symbol), {
-					result.add(this.makeRandomProperty(item));
-				});
-				if(item.isKindOf(Association), {
-					result.add(
-						this.makeRandomProperty(item.key, item.value);
-					);
-				});
-			});
-		});
-		^result;
-	}
-
-	*makeRandomProperties{arg type, params;
+	*generateRandomProperties{arg params;
 		var testClass, class, propKeys, result;
+		var type;
 		result = VTMValueProperties.new;
-		type = type ?? {TestVTMValue.testTypes.choose};
-		class = "VTM%Value".format(type.asString.capitalize).asSymbol.asClass;
-		class.debug;
-		testClass = "Test%".format(class.name).asSymbol.asClass;
-		testClass.debug;
-		propKeys = class.propertyKeys;
-		propKeys.postln;
+		if(this == TestVTMValue, {
+			class = TestVTMValue.classesForTesting.choose;
+		}, {
+			class = this.findTestedClass;
+		});
+
+		type = class.type;
+		
+		testClass = this.findTestClass(class);
+
+		"Class: %\ntype: %\ntestClass: %".format(class, type, testClass).debug;
+
+		if(params.notNil and: params.isKindOf(Dictionary), {
+			propKeys = params.keys;
+		}, {
+			propKeys = class.propertyKeys;
+		});
+		propKeys.debug;
+
 		result.put(\type, type);
 		propKeys.do({arg propKey;
 			var propParams;
 			if(params.notNil and: {params.includesKey(propKey);}, {
 				propParams = params[propKey];
 			});
-			testClass.makeRandomProperty(propKey, propParams);
+			result.put(
+				propKey,
+				testClass.generateRandomProperty(propKey, propParams)
+			);
 		});
 		^result;
 	}
 
-	*makeRandomObject{arg params;
-		var props = this.makeRandomProperties;
+	*generateRandomObject{arg params;
+		var props = this.generateRandomProperties;
 		^VTMValue.makeFromProperties(props);
 	}
 
-	*makeRandomValue{arg params;
+	*generateRandomValue{arg params;
 		^this.subclassResponsibility(thisMethod);
 	}
 
-	*makeRandomProperty{arg key, params;
+	*generateRandomProperty{arg key, params;
 		var result;
 		switch(key,
-			\enabled, {result = this.makeRandomBoolean(params)},
-			\filterRepetitions, { result = this.makeRandomBoolean(params); },
-			\value, { result = this.makeRandomValue(params); },
-			\defaultValue, { result = this.makeRandomValue(params); },
-			\enum, { result = this.makeRandomEnum(params); },
-			\restrictValueToEnum, { result = this.makeRandomBoolean(params); }
+			\enabled, {result = this.generateRandomBoolean(params)},
+			\filterRepetitions, { result = this.generateRandomBoolean(params); },
+			\value, { result = this.generateRandomValue(params); },
+			\defaultValue, { result = this.generateRandomValue(params); },
+			\enum, { result = this.generateRandomEnum(params); },
+			\restrictValueToEnum, { result = this.generateRandomBoolean(params); }
 		);
 		^result;
 	}
 
-	*makeRandomEnum{arg params;
+	*generateRandomEnum{arg params;
 		var minRand = 5, maxRand = 10;
 		^rrand(minRand, maxRand).collect({arg i;
 			[
-				[i, this.makeRandomSymbol((noNumbers: true, noSpaces: true))].choose,
-				this.makeRandomValue
+				[i, this.generateRandomSymbol((noNumbers: true, noSpaces: true))].choose,
+				this.generateRandomValue
 			];
 		}).flatten;
 	}
@@ -106,7 +105,7 @@ TestVTMValue : VTMUnitTest {
 					"[%] - responds to properties setter '%'".format(class, propertyKey.asSetter)
 				);
 				//setting properties should affect the obj properties
-				testVal = testClass.makeRandomProperty(propertyKey);
+				testVal = testClass.generateRandomProperty(propertyKey);
 				try{
 					obj.perform(propertyKey.asSetter, testVal);
 					this.assertEquals(
@@ -242,7 +241,7 @@ TestVTMValue : VTMUnitTest {
 		this.class.classesForTesting.do({arg class;
 			var wasRun = false;
 			var testClass = this.class.findTestClass(class);
-			var properties = testClass.makeRandomProperties(class.type);
+			var properties = testClass.generateRandomProperties(class.type);
 			var valueObj = class.makeFromType(class.type, properties);
 
 			this.assertEquals(
@@ -260,7 +259,7 @@ TestVTMValue : VTMUnitTest {
 			var testClass, testValue;
 			var valueObj = class.new();
 			testClass = this.class.testclassForType( class.type );
-			testValue = testClass.makeRandomValue;
+			testValue = testClass.generateRandomValue;
 			valueObj.value = testValue;
 			this.assertEquals(
 				valueObj.value, testValue, "% 'value' was set".format(testClass.name)
@@ -275,7 +274,7 @@ TestVTMValue : VTMUnitTest {
 			var valueObj;
 			try{
 				testClass = this.class.testclassForType( class.type );
-				testValue = testClass.makeRandomValue;
+				testValue = testClass.generateRandomValue;
 				valueObj = class.new((defaultValue: testValue));
 				this.assertEquals(
 					valueObj.defaultValue, testValue, "Value defaultValue was set [%]".format(testClass.name)
@@ -299,10 +298,10 @@ TestVTMValue : VTMUnitTest {
 			var testClass, testValue, wasRun;
 			var valueObj;
 			testClass = this.class.testclassForType( class.type );
-			testValue = testClass.makeRandomValue;
+			testValue = testClass.generateRandomValue;
 			valueObj = class.new;
-			valueObj.value = testClass.makeRandomValue;
-			valueObj.defaultValue = testClass.makeRandomValue;
+			valueObj.value = testClass.generateRandomValue;
+			valueObj.defaultValue = testClass.generateRandomValue;
 			valueObj.reset;
 			this.assertEquals(
 				valueObj.value, valueObj.defaultValue,
@@ -310,8 +309,8 @@ TestVTMValue : VTMUnitTest {
 			);
 			wasRun = false;
 			valueObj.action_({arg p; wasRun = true;});
-			valueObj.value = testClass.makeRandomValue;
-			valueObj.defaultValue = testClass.makeRandomValue;
+			valueObj.value = testClass.generateRandomValue;
+			valueObj.defaultValue = testClass.generateRandomValue;
 			valueObj.reset(doActionUponReset: true);
 			this.assert(
 				wasRun,
@@ -377,7 +376,7 @@ TestVTMValue : VTMUnitTest {
 				var valueObj, gotValue = false, gotParamPassed = false;
 				testClass = this.class.testclassForType( class.type );
 				valueObj = class.new();
-				testValue = testClass.makeRandomValue;
+				testValue = testClass.generateRandomValue;
 				valueObj.value = testValue;
 				valueObj.action = {arg p;
 					gotParamPassed = p === valueObj;
@@ -407,13 +406,13 @@ TestVTMValue : VTMUnitTest {
 			wasRun = false;
 			gotUpdatedValue = false;
 			testClass = this.class.testclassForType( class.type );
-			testValue = testClass.makeRandomValue;
+			testValue = testClass.generateRandomValue;
 			valueObj = class.new();
 			valueObj.action = {arg p;
 				wasRun = true;
 				gotUpdatedValue = p.value == testValue;
 			};
-			valueObj.value = testClass.makeRandomValue;
+			valueObj.value = testClass.generateRandomValue;
 			valueObj.valueAction_(testValue);
 			this.assert(
 				wasRun and: {gotUpdatedValue},
@@ -428,7 +427,7 @@ TestVTMValue : VTMUnitTest {
 			var valueObj;
 			var wasRun = false;
 			testClass = this.class.testclassForType( class.type );
-			testValue = testClass.makeRandomValue;
+			testValue = testClass.generateRandomValue;
 			valueObj = class.new();
 			valueObj.filterRepetitions = true;
 			valueObj.action = {arg p;
@@ -449,7 +448,7 @@ TestVTMValue : VTMUnitTest {
 			var valueObj;
 			var testProperties;
 			testClass = this.class.testclassForType( class.type );
-			testProperties = testClass.makeRandomProperties(
+			testProperties = testClass.generateRandomProperties(
 				[
 					\value,
 					\defaultValue,
@@ -476,7 +475,7 @@ TestVTMValue : VTMUnitTest {
 			var testEnum;
 			var testProperties;
 			testClass = this.class.testclassForType( class.type );
-			testProperties = testClass.makeRandomProperties(
+			testProperties = testClass.generateRandomProperties(
 				[
 					\value,
 					\defaultValue,
@@ -502,7 +501,7 @@ TestVTMValue : VTMUnitTest {
 	// 		var valueObj;
 	// 		var testProperties, testProperties;
 	// 		testClass = this.class.testclassForType( class.type );
-	// 		testProperties = testClass.makeRandomProperties(
+	// 		testProperties = testClass.generateRandomProperties(
 	// 			[
 	// 				\value,
 	// 				\defaultValue,

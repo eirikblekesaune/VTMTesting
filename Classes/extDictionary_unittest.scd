@@ -2,7 +2,7 @@
 	var highBits, lowBits, testVal, shouldBe;
 
 	//test 64-bit float parse
-	#highBits, lowBits = { Integer.makeRandom32Bits; } ! 2;
+	#highBits, lowBits = { Integer.generateRandom32Bits; } ! 2;
 	shouldBe = Float.from64Bits(highBits, lowBits);
 
 	testVal = Dictionary[
@@ -15,7 +15,7 @@
 	);
 
 	//test 32-bit float parse
-	lowBits = Integer.makeRandom32Bits;
+	lowBits = Integer.generateRandom32Bits;
 	shouldBe = Float.from32Bits(lowBits);
 	testVal = Dictionary[
 		\mykey -> "<float> %".format(lowBits.asHexString(8))

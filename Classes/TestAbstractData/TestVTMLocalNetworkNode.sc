@@ -13,7 +13,7 @@ TestVTMLocalNetworkNode : TestVTMAbstractDataManager {
 		var obj, path;
 
 		//Test Module
-		path = this.class.makeRandomSymbol;
+		path = this.class.generateRandomSymbol;
 		obj = VTMModule.new(path);
 		this.assert(
 			obj === VTM.local.moduleHost[path],
@@ -26,7 +26,7 @@ TestVTMLocalNetworkNode : TestVTMAbstractDataManager {
 		);
 
 		//Test Scene
-		path = this.class.makeRandomSymbol;
+		path = this.class.generateRandomSymbol;
 		obj = VTMScene.new(path);
 		this.assert(
 			obj === VTM.local.sceneOwner[path],
@@ -39,7 +39,7 @@ TestVTMLocalNetworkNode : TestVTMAbstractDataManager {
 		);
 
 		//Test HardwareDevice
-		path = this.class.makeRandomSymbol;
+		path = this.class.generateRandomSymbol;
 		obj = VTMHardwareDevice.new(path);
 		this.assert(
 			obj === VTM.local.hardwareSetup[path],
@@ -52,7 +52,7 @@ TestVTMLocalNetworkNode : TestVTMAbstractDataManager {
 		);
 
 		//Test Score
-		path = this.class.makeRandomSymbol;
+		path = this.class.generateRandomSymbol;
 		obj = VTMScore.new(path);
 		this.assert(
 			obj === VTM.local.scoreManager[path],

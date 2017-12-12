@@ -1,5 +1,5 @@
 TestVTMNoneValue : TestVTMValue{
-	*makeRandomValue{
+	*generateRandomValue{
 		VTMValue.typeToClass(TestVTMValue.testTypes.choose).prDefaultValueForType.class.generateRandom;
 	}
 }

@@ -95,11 +95,11 @@ VTMUnitTest : UnitTest {
 		};
 	}
 
-	*makeRandomSymbol{arg params;
-		^this.makeRandomString(params).asSymbol;
+	*generateRandomSymbol{arg params;
+		^this.generateRandomString(params).asSymbol;
 	}
 
-	*makeRandomPath{arg params;
+	*generateRandomPath{arg params;
 		var numLevels;
 		var minLevels = 1;
 		var maxLevels = 3;
@@ -113,12 +113,12 @@ VTMUnitTest : UnitTest {
 			numLevels = rrand(minLevels, maxLevels);
 		});
 		numLevels.collect({arg i;
-			result = result.addAll("/%".format(this.makeRandomString));
+			result = result.addAll("/%".format(this.generateRandomString));
 		}).asSymbol;
 		^result;
 	}
 
-	*makeRandomString{arg params;
+	*generateRandomString{arg params;
 		var chars;
 		var minLength, maxLength, noSpaces, noNumbers, noAlphas, onlyAlphaNumeric;
 		minLength = 1;
@@ -158,7 +158,7 @@ VTMUnitTest : UnitTest {
 		);
 	}
 
-	*makeRandomBoolean {arg params;
+	*generateRandomBoolean {arg params;
 		var chance = 0.5;
 		if(params.notNil and: {params.isKindOf(Dictionary)}, {
 			chance = params[\chance] ? 0.5;
@@ -166,11 +166,11 @@ VTMUnitTest : UnitTest {
 		^chance.coin;
 	}
 
-	*makeRandomInteger{arg params;
-		^this.makeRandomDecimal(params).asInteger;
+	*generateRandomInteger{arg params;
+		^this.generateRandomDecimal(params).asInteger;
 	}
 
-	*makeRandomDecimal{arg params;
+	*generateRandomDecimal{arg params;
 		var minVal = -2147483648.0;//32 bits random
 		var maxVal = 2147483647.0;
 		if(params.notNil, {
@@ -180,7 +180,7 @@ VTMUnitTest : UnitTest {
 		^rrand(minVal, maxVal);
 	}
 
-	*makeRandomDictionary{arg params;
+	*generateRandomDictionary{arg params;
 		var result;
 		var size, minSize = 1, maxSize = 15;
 		var dataTypes;
@@ -201,8 +201,8 @@ VTMUnitTest : UnitTest {
 		});
 		size.do({arg i;
 			result.put(
-				this.makeRandomSymbol,
-				this.perform("makeRandom%".format(dataTypes[i]).asSymbol)
+				this.generateRandomSymbol,
+				this.perform("generateRandom%".format(dataTypes[i]).asSymbol)
 			);
 		});
 		^result;

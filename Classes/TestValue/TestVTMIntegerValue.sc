@@ -1,7 +1,7 @@
 TestVTMIntegerValue : TestVTMNumberValue {
 
-	*makeRandomValue{arg params;
-		^this.makeRandomInteger(params);
+	*generateRandomValue{arg params;
+		^this.generateRandomInteger(params);
 	}
 
 	setUp{

@@ -1,10 +1,10 @@
 TestVTMDictionaryValue : TestVTMCollectionValue {
-	*makeRandomValue{arg params;
+	*generateRandomValue{arg params;
 		//This is a temporary solution
 		^Dictionary[
-			this.makeRandomString -> this.makeRandomInteger,
-			this.makeRandomString -> this.makeRandomString,
-			this.makeRandomString -> this.makeRandomDecimal;
+			this.generateRandomString -> this.generateRandomInteger,
+			this.generateRandomString -> this.generateRandomString,
+			this.generateRandomString -> this.generateRandomDecimal;
 		];
 	}
 

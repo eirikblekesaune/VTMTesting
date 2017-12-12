@@ -1,5 +1,5 @@
 TestVTMContextDefinition : VTMUnitTest {
-	*makeRandomDefinitionEnvironment{arg params;
+	*generateRandomDefinitionEnvironment{arg params;
 		var result = Environment.new;
 		result.use{
 			//Make prepare function
@@ -16,9 +16,9 @@ TestVTMContextDefinition : VTMUnitTest {
 			};
 			//Make parameter descriptions
 
-			TestVTMAttribute.makeRandomDeclaration;
-			TestVTMAttribute.makeRandomDescription;
-			TestVTMIntegerValue.makeRandomProperties
+			TestVTMAttribute.generateRandomDeclaration;
+			TestVTMAttribute.generateRandomDescription;
+			TestVTMIntegerValue.generateRandomProperties
 			//Make attribute descriptions
 			//Make command descriptions
 			//Make signal description
@@ -27,10 +27,10 @@ TestVTMContextDefinition : VTMUnitTest {
 		^result;
 	}
 
-	*makeRandomContextDefinition{arg params, context;
+	*generateRandomContextDefinition{arg params, context;
 		var result;
-		var envir = this.makeRandomDefinitionEnvironment(params);
-		var defname = this.makeRandomSymbol;
+		var envir = this.generateRandomDefinitionEnvironment(params);
+		var defname = this.generateRandomSymbol;
 
 
 		result = VTMContextDefinition(defname, envir, context);

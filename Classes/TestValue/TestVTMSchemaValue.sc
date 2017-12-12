@@ -1,7 +1,7 @@
 TestVTMSchemaValue : TestVTMDictionaryValue {
 
-	*makeRandomValue{arg params;
-		^super.makeRandomValue(params);
+	*generateRandomValue{arg params;
+		^super.generateRandomValue(params);
 	}
 
 	test_DefaultProperties{

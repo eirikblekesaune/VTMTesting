@@ -1,6 +1,6 @@
 TestVTMTimecodeValue : TestVTMValue {
 
-	*makeRandomValue{arg params;
+	*generateRandomValue{arg params;
 		var result;
 		var minTime, maxTime;
 		if(params.notNil, {

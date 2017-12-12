@@ -1,7 +1,7 @@
 TestVTMRemoteNetworkNode : TestVTMElement {
-	*makeRandomParameter{arg key, params;
+	*generateRandomParameter{arg key, params;
 		var result;
-		result = super.makeRandomParameter(key, params);
+		result = super.generateRandomParameter(key, params);
 		//
 		result = switch(key,
 			\ipString, {

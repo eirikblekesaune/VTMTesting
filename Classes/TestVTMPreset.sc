@@ -1,8 +1,8 @@
 TestVTMPreset : VTMUnitTest {
 
-	*makeRandomAttribute{arg key, params;
+	*generateRandomAttribute{arg key, params;
 		var result;
-		result = super.makeRandomAttribute(key, params);
+		result = super.generateRandomAttribute(key, params);
 		switch(key,
 			\values, {
 				var parameterDeclarationArray = params;
@@ -20,21 +20,21 @@ TestVTMPreset : VTMUnitTest {
 						\tuple
 					].do({arg paramType;
 						result = result.addAll([
-							this.makeRandomSymbol,
-							TestVTMValue.testclassForType(paramType).makeRandomValue
+							this.generateRandomSymbol,
+							TestVTMValue.testclassForType(paramType).generateRandomValue
 						]);
 					});
 				}, {
 					parameterDeclarationArray.do({arg parameterDeclaration;
 						if(parameterDeclaration.isKindOf(Dictionary).not, {
 							parameterDeclaration = (
-								name: this.makeRandomSymbol,
+								name: this.generateRandomSymbol,
 								type: parameterDeclaration
 							);
 						});
 						result = result.addAll([
-							parameterDeclaration[\name] ? this.makeRandomSymbol,
-							TestVTMValue.testclassForType(parameterDeclaration[\type]).makeRandomValue(
+							parameterDeclaration[\name] ? this.generateRandomSymbol,
+							TestVTMValue.testclassForType(parameterDeclaration[\type]).generateRandomValue(
 								parameterDeclaration
 							)
 						]);

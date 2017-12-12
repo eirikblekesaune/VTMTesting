@@ -1,9 +1,9 @@
 TestVTMListValue : TestVTMCollectionValue {
-	*makeRandomValue{arg params;
+	*generateRandomValue{arg params;
 		^[
-			this.makeRandomInteger,
-			this.makeRandomString,
-			this.makeRandomDecimal;
+			this.generateRandomInteger,
+			this.generateRandomString,
+			this.generateRandomDecimal;
 		];
 	}
 }

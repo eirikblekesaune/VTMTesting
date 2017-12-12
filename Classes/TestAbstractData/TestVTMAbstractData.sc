@@ -22,14 +22,14 @@ TestVTMAbstractData : VTMUnitTest {
 		];
 	}
 
-	*makeRandomParameters{arg params;
+	*generateRandomParameters{arg params;
 		var result = VTMParameters[];
 		this.findTestedClass.parameterKeys.do({arg attrKey;
 			var attrParams, attrVal;
 			if(params.notNil and: {params.includesKey(attrKey)}, {
 				attrParams = params.at(attrKey);
 			});
-			attrVal = this.makeRandomParameter(attrKey, attrParams);
+			attrVal = this.generateRandomParameter(attrKey, attrParams);
 			if(attrVal.notNil, {
 				result.put(attrKey, attrVal);
 			});
@@ -37,7 +37,7 @@ TestVTMAbstractData : VTMUnitTest {
 		^result;
 	}
 
-	*makeRandomParametersForObject{arg object;
+	*generateRandomParametersForObject{arg object;
 		var testClass, class;
 		var result = VTMParameters[];
 		class = object.class;
@@ -48,15 +48,15 @@ TestVTMAbstractData : VTMUnitTest {
 		});
 	}
 
-	*makeRandomDeclaration{arg params;
-		^this.makeRandomParameters(params);
+	*generateRandomDeclaration{arg params;
+		^this.generateRandomParameters(params);
 	}
 
-	*makeRandomParameter{arg key, params;
+	*generateRandomParameter{arg key, params;
 		^nil;
 	}
 
-	*makeRandomManagerObject{
+	*generateRandomManagerObject{
 		var result;
 		var managerClass;
 		managerClass = this.findTestedClass.managerClass;
@@ -87,7 +87,7 @@ TestVTMAbstractData : VTMUnitTest {
 		var obj, testParameters, managerObj;
 		this.class.classesForTesting.do({arg class;
 			var testClass = VTMUnitTest.findTestClass(class);
-			var testName = VTMUnitTest.makeRandomSymbol;
+			var testName = VTMUnitTest.generateRandomSymbol;
 			var managerClass = class.managerClass;
 			//managerClass shouldn not be nil
 			this.assert(managerClass.notNil,
@@ -98,11 +98,11 @@ TestVTMAbstractData : VTMUnitTest {
 				"[%] - made manager obj for test class".format(class)
 			);
 
-			testParameters = testClass.makeRandomParameters;
+			testParameters = testClass.generateRandomParameters;
 			//"Making with these parameters: %".format(testParameters).debug;
 			
 			//Testing without manager
-			testName = VTMUnitTest.makeRandomSymbol;
+			testName = VTMUnitTest.generateRandomSymbol;
 			obj = class.new(
 				testName,
 				testParameters
@@ -118,7 +118,7 @@ TestVTMAbstractData : VTMUnitTest {
 			obj.free;
 
 			//Trying to do with manager
-			testParameters = testClass.makeRandomParameters;
+			testParameters = testClass.generateRandomParameters;
 			obj = class.new(
 				testName,
 				testParameters,
