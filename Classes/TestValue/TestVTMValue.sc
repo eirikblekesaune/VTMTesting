@@ -3,15 +3,15 @@ TestVTMValue : VTMUnitTest {
 		^[
 			//VTMNoneValue,
 			VTMBooleanValue,
-//			VTMStringValue,
-//			VTMDecimalValue,
-//			VTMIntegerValue,
-//			VTMTimecodeValue,
-//			VTMListValue,
-//			VTMDictionaryValue,
-//			VTMArrayValue,
-//			VTMSchemaValue,
-//			VTMTupleValue
+			VTMStringValue,
+			VTMDecimalValue,
+			VTMIntegerValue,
+			// VTMTimecodeValue,
+			// VTMListValue,
+			// VTMDictionaryValue,
+			// VTMArrayValue,
+			// VTMSchemaValue,
+			// VTMTupleValue
 		];
 	}
 
@@ -23,6 +23,13 @@ TestVTMValue : VTMUnitTest {
 		^this.classesForTesting.collect(_.type);
 	}
 
+
+	//params args expects a dictionary where the
+	//keys are the property keys, and the values being
+	//parameters for the random generator methods.
+	//e.g. ( value: (minVal: 0, maxVal: 10) ); generates a value between 0 to 10
+	//if no random parameters are to given, an empty divt should be used as value:
+	// (value: (), defaultValue: () ); makes random properties for given keys.
 	*generateRandomProperties{arg params;
 		var testClass, class, propKeys, result;
 		var type;
@@ -34,21 +41,21 @@ TestVTMValue : VTMUnitTest {
 		});
 
 		type = class.type;
-		
+
 		testClass = this.findTestClass(class);
+		//"Class: %\ntype: %\ntestClass: %".format(class, type, testClass).debug;
 
-		"Class: %\ntype: %\ntestClass: %".format(class, type, testClass).debug;
-
-		if(params.notNil and: params.isKindOf(Dictionary), {
+		if(params.notNil and: {params.isKindOf(Dictionary)}, {
 			propKeys = params.keys;
 		}, {
 			propKeys = class.propertyKeys;
 		});
-		propKeys.debug;
 
 		result.put(\type, type);
+
 		propKeys.do({arg propKey;
 			var propParams;
+
 			if(params.notNil and: {params.includesKey(propKey);}, {
 				propParams = params[propKey];
 			});
@@ -61,7 +68,7 @@ TestVTMValue : VTMUnitTest {
 	}
 
 	*generateRandomObject{arg params;
-		var props = this.generateRandomProperties;
+		var props = this.generateRandomProperties( params );
 		^VTMValue.makeFromProperties(props);
 	}
 
@@ -241,8 +248,8 @@ TestVTMValue : VTMUnitTest {
 		this.class.classesForTesting.do({arg class;
 			var wasRun = false;
 			var testClass = this.class.findTestClass(class);
-			var properties = testClass.generateRandomProperties(class.type);
-			var valueObj = class.makeFromType(class.type, properties);
+			var properties = testClass.generateRandomProperties();
+			var valueObj = class.new( properties );
 
 			this.assertEquals(
 				valueObj.properties, properties,
@@ -444,24 +451,23 @@ TestVTMValue : VTMUnitTest {
 
 	test_SetVariablesFromProperties{
 		this.class.classesForTesting.do({arg class;
-			var testClass, testValue;
+			var testClass, testValue, testPropParams;
 			var valueObj;
 			var testProperties;
 			testClass = this.class.testclassForType( class.type );
+			testPropParams = VTMOrderedIdentityDictionary[
+				\value -> (),
+				\defaultValue -> (),
+				\filterRepetitions -> ()
+			];
 			testProperties = testClass.generateRandomProperties(
-				[
-					\value,
-					\defaultValue,
-					\filterRepetitions
-				]
+				testPropParams
 			);
-
-			valueObj = VTMValue.makeFromType(class.type, testProperties);
-
-			[\value, \defaultValue, \filterRepetitions].do({arg item;
+			valueObj = VTMValue.makeFromProperties(testProperties);
+			testPropParams.keysValuesDo({arg key, val;
 				this.assertEquals(
-					valueObj.perform(item), testProperties[item],
-					"Value set % through properties [%]".format(item, class.name)
+					valueObj.perform(key), testProperties[key],
+					"Value set % through properties [%]".format(key, class.name)
 				);
 			});
 			valueObj.free;
@@ -474,15 +480,16 @@ TestVTMValue : VTMUnitTest {
 			var valueObj;
 			var testEnum;
 			var testProperties;
+			var testPropParams = VTMOrderedIdentityDictionary[
+				\value -> (),
+				\defaultValue -> (),
+				\filterRepetitions -> (),
+				\enabled -> (value: true),
+				\enum -> ()
+			];
 			testClass = this.class.testclassForType( class.type );
 			testProperties = testClass.generateRandomProperties(
-				[
-					\value,
-					\defaultValue,
-					\filterRepetitions,
-					\enabled -> true,
-					\enum
-				]
+				testPropParams
 			);
 			testEnum = testProperties.at(\enum);
 			valueObj = VTMValue.makeFromType(class.type, testProperties);

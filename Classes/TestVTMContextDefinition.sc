@@ -18,7 +18,7 @@ TestVTMContextDefinition : VTMUnitTest {
 
 			TestVTMAttribute.generateRandomDeclaration;
 			TestVTMAttribute.generateRandomDescription;
-			TestVTMIntegerValue.generateRandomProperties
+			TestVTMIntegerValue.generateRandomProperties;
 			//Make attribute descriptions
 			//Make command descriptions
 			//Make signal description
