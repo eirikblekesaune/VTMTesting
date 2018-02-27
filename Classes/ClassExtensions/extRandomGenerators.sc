@@ -38,6 +38,12 @@
 			})
 		);
 	}
+
+	*generateRandomHexString { arg bytes = 8;
+		^"0x%".format(
+			String.newFrom(String.newFrom({"0123456789ABCDEF".choose} ! bytes))
+		);
+	}
 }
 
 + Symbol {
@@ -77,6 +83,10 @@
 	*generateRandom{arg params;
 		^Float.generateRandom(params).asInteger;
 	}
+
+	*generateRandom32Bits{
+		^String.generateRandomHexString.interpret;
+	}
 }
 
 + Float {
@@ -88,6 +98,14 @@
 			maxVal = params[\maxVal] ? maxVal;
 		});
 		^rrand(minVal, maxVal);
+	}
+
+	*generateRandom64Bits{
+		^Float.from64Bits(*{Integer.generateRandom32Bits} ! 2);
+	}
+
+	*generateRandom32Bits{
+		^Float.from32Bits(Integer.generateRandom32Bits);
 	}
 }
 
@@ -238,7 +256,7 @@
 
 + Int32Array {
 	*generateRandomSlotItem{arg params;
-		^Integer.makeRandom32Bits;
+		^Integer.generateRandom32Bits;
 	}
 }
 
@@ -283,7 +301,7 @@
 			newParams = params.deepCopy;
 		});
 		newParams.put(\size, size);
-		
+
 		^Signal.generateRandom(newParams).asWavetable;
 	}
 }
