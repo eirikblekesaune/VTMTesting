@@ -2,8 +2,6 @@ TestVTMValue : VTMUnitTest {
 	*classesForTesting{
 		^[
 			//VTMNoneValue,
-			VTMBooleanValue,
-			VTMStringValue,
 			VTMDecimalValue,
 			VTMIntegerValue,
 			// VTMTimecodeValue,
@@ -252,7 +250,7 @@ TestVTMValue : VTMUnitTest {
 			var valueObj = class.new( properties );
 
 			this.assertEquals(
-				valueObj.properties, properties,
+				valueObj.properties(), properties,
 				"% returned correct properties.".format(class)
 			);
 			valueObj.free;
