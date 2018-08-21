@@ -1,0 +1,2 @@
+TestVTMAudioGenerator : TestVTMAudioSource {
+}

@@ -1,0 +1,1 @@
+TestVTMAudioDestination : TestVTMAudioModule {}
