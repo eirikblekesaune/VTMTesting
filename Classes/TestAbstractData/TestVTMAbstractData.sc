@@ -1,4 +1,4 @@
-TestVTMAbstractData : VTMUnitTest {
+TestVTMData : VTMUnitTest {
 
 	*classesForTesting{
 		^[

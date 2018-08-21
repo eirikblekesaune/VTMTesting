@@ -1,4 +1,4 @@
-TestVTMAttributeManager : TestVTMAbstractDataManager {
+TestVTMAttributeManager : TestVTMDataManager {
 
 	*generateRandomPresetForAttributeDeclaration{arg declaration;
 		var result = IdentityDictionary.new;

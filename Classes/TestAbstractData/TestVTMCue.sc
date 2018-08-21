@@ -1,4 +1,4 @@
-TestVTMCue : TestVTMAbstractData {
+TestVTMCue : TestVTMData {
 
 	*generateRandomAttribute{arg key, params;
 		var result;

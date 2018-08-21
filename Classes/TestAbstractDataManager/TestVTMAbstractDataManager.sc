@@ -1,4 +1,4 @@
-TestVTMAbstractDataManager : VTMUnitTest {
+TestVTMDataManager : VTMUnitTest {
 
 	*dataClass{ ^this.findTestedClass.dataClass; }
 

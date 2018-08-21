@@ -1,1 +1,1 @@
-TestVTMComposableContextManager : TestVTMAbstractDataManager {}
+TestVTMComposableContextManager : TestVTMDataManager {}

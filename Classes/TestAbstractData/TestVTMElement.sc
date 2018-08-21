@@ -1,4 +1,4 @@
-TestVTMElement : TestVTMAbstractData {
+TestVTMElement : TestVTMData {
 	*classesForTesting{
 		^[
 			VTMDefinitionLibrary,

@@ -1,4 +1,4 @@
-TestVTMLocalNetworkNode : TestVTMAbstractDataManager {
+TestVTMLocalNetworkNode : TestVTMDataManager {
 
 	test_singleton{
 		var aa, bb;

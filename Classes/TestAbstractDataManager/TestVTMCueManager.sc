@@ -1,3 +1,3 @@
-TestVTMCueManager : TestVTMAbstractDataManager {
+TestVTMCueManager : TestVTMDataManager {
 
 }

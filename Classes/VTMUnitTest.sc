@@ -7,8 +7,8 @@ VTMUnitTest : UnitTest {
 
 		[
 			VTMValue,
-			VTMAbstractData,
-			VTMAbstractDataManager,
+			VTMData,
+			VTMDataManager,
 			VTMNamedList,
 			// VTMApplication, //buggy testing when using .wait andhaung etc.
 		].do({arg cl;

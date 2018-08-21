@@ -1,2 +1,2 @@
-TestVTMDefinitionLibraryManager : TestVTMAbstractDataManager {
+TestVTMDefinitionLibraryManager : TestVTMDataManager {
 }
