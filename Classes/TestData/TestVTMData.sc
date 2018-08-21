@@ -1,25 +1,7 @@
 TestVTMData : VTMUnitTest {
 
 	*classesForTesting{
-		^[
-			//ValueElements
-			VTMAttribute,
-			VTMCommand,
-			VTMReturn,
-			VTMSignal,
-			//Elements
-			VTMMapping,
-			VTMDefinitionLibrary,
-			VTMRemoteNetworkNode,
-			//Contexts
-			VTMApplication,
-			//ComposableContexts
-			VTMCue,
-			VTMHardwareDevice,
-			VTMScore,
-			VTMModule,
-			VTMScene
-		];
+		^this.findTestedClass.allSubclasses.reject(_.isAbstractClass);
 	}
 
 	*generateRandomParameters{arg params;
