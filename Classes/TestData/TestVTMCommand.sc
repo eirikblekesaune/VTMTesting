@@ -1,2 +1,2 @@
-TestVTMCommand : TestVTMValueElement {
+TestVTMCommand : TestVTMControl {
 }

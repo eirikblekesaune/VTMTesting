@@ -1,18 +1,4 @@
 TestVTMElement : TestVTMData {
-	*classesForTesting{
-		^[
-			VTMDefinitionLibrary,
-			VTMCommand,
-			VTMRemoteNetworkNode,
-			VTMApplication,
-			VTMModule,
-			VTMApplication,
-			VTMHardwareDevice,
-			VTMScore,
-			VTMScene
-		];
-	}
-
 	*generateRandomDeclaration{arg params;
 		var result;
 		result = super.generateRandomDeclaration(params);
@@ -65,9 +51,6 @@ TestVTMElement : TestVTMData {
 			managerObj.free;
 		});
 	}
-
-	//Test OSC communication with components
-	test_ParameterOSC{}
 
 	test_AttributeOSC{
 		var obj, testDeclaration;

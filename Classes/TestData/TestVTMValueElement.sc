@@ -1,4 +1,4 @@
-TestVTMValueElement : TestVTMData {
+TestVTMControl : TestVTMData {
 	*generateRandomParameter{arg key, params;
 		var result = super.generateRandomParameter(key, params);
 		result = switch(key,

@@ -1,3 +1,3 @@
-TestVTMAttribute : TestVTMValueElement {
+TestVTMAttribute : TestVTMControl {
 
 }

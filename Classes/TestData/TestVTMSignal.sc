@@ -1,2 +1,2 @@
-TestVTMSignal : TestVTMValueElement {
+TestVTMSignal : TestVTMControl {
 }

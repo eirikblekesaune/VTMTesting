@@ -1,3 +1,3 @@
-TestVTMReturn : TestVTMValueElement {
+TestVTMReturn : TestVTMControl {
 
 }

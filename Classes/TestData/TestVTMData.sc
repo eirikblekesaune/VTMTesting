@@ -5,8 +5,8 @@ TestVTMData : VTMUnitTest {
 	}
 
 	*generateRandomParameters{arg params;
-		var result = VTMParameters[];
-		this.findTestedClass.parameterKeys.do({arg attrKey;
+		var result = VTMParameterManager[];
+		this.findTestedClass.parameterDescriptions.keysValuesDo({arg attrKey, attrDesc;
 			var attrParams, attrVal;
 			if(params.notNil and: {params.includesKey(attrKey)}, {
 				attrParams = params.at(attrKey);
@@ -82,7 +82,7 @@ TestVTMData : VTMUnitTest {
 
 			testParameters = testClass.generateRandomParameters;
 			//"Making with these parameters: %".format(testParameters).debug;
-			
+
 			//Testing without manager
 			testName = VTMUnitTest.generateRandomSymbol;
 			obj = class.new(
@@ -131,6 +131,8 @@ TestVTMData : VTMUnitTest {
 		});
 	}
 
-	//Testing parameters may have to be done on class by class basis
-	//for the moment.
+
+	//Test OSC communication with components
+	test_ParameterOSC{}
+
 }
