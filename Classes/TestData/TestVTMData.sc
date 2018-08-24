@@ -35,7 +35,12 @@ TestVTMData : VTMUnitTest {
 	}
 
 	*generateRandomParameter{arg key, params;
-		^nil;
+		var result;
+		result = switch(key,
+			\name, { this.generateRandomSymbol; }
+		);
+
+		^result;
 	}
 
 	*generateRandomManagerObject{
@@ -60,6 +65,35 @@ TestVTMData : VTMUnitTest {
 				this.passed(thisMethod,
 					"[%] - Threw error when no name was given"
 					.format(class);
+				);
+			};
+		});
+	}
+
+	test_defaultConstruction{
+		this.class.classesForTesting.do({arg class;
+			var testName;
+			var obj;
+			var testClass;
+			var parameters = VTMOrderedIdentityDictionary.new;
+			testClass = this.class.findTestClass(class);
+			class.mandatoryParameters.do({arg it;
+				parameters.put(
+					it,
+					testClass.generateRandomParameter(it)
+				);
+			});
+			testName = parameters.removeAt(\name);
+			try{
+				obj = class.new(testName, parameters);
+				this.passed(thisMethod,
+					"[%] - Made default Data object"
+					.format(class)
+				);
+			} {|err|
+				this.failed(thisMethod,
+					"[%] - Failed to make default Data object: %"
+					.format(class, err.errorString);
 				);
 			};
 		});
