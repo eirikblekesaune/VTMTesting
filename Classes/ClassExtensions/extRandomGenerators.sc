@@ -522,21 +522,6 @@
 	}
 }
 
-+ NamedList {
-	//the interface the NamedList class is a bit
-	//cumbersome and too "helpful" in a way.
-	//Therefore a simple solution here.
-	*generateRandom{arg params;
-		var result, names;
-		result = List.generateRandom((valueClass: Float));
-
-		names = result.size.collect({
-			Symbol.generateRandom;
-		});
-		^this.newUsing(result, names);
-	}
-}
-
 + TwoWayIdentityDictionary {
 	*generateRandom{arg params;
 		var result, dict;
