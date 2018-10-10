@@ -4,30 +4,37 @@ TestVTMData : VTMUnitTest {
 		^this.findTestedClass.allSubclasses.reject(_.isAbstractClass);
 	}
 
-	*generateRandomParameters{arg params;
-		var result = VTMParameterManager[];
-		this.findTestedClass.parameterDescriptions.keysValuesDo({arg attrKey, attrDesc;
-			var attrParams, attrVal;
-			if(params.notNil and: {params.includesKey(attrKey)}, {
-				attrParams = params.at(attrKey);
+	*generateRandomParameters{| parameterKeys, randomizationSettings |
+		var result = VTMOrderedIdentityDictionary[];
+		var testedClass = this.findTestedClass;
+		var parameterDescriptions;
+		var keys;
+
+		//if no parameter settings declared,
+		//generate all parameters in description
+		if(parameterKeys.notNil, {
+			keys = parameterKeys;
+		}, {
+			keys = testedClass.parameterDescriptions.keys;
+		});
+		parameterDescriptions = testedClass.description[\parameters];
+
+		keys.do({| key |
+			var val, description, randSettings;
+			if(randomizationSettings.notNil
+				and: {randomizationSettings.includesKey(key)}, {
+				randSettings = randomizationSettings[key];
 			});
-			attrVal = this.generateRandomParameter(attrKey, attrParams);
-			if(attrVal.notNil, {
-				result.put(attrKey, attrVal);
+			description = parameterDescriptions[key];
+			val = this.generateRandomParameter(
+				key, description, randSettings
+			);
+
+			if(val.notNil, {
+				result.put(key, val);
 			});
 		});
 		^result;
-	}
-
-	*generateRandomParametersForObject{arg object;
-		var testClass, class;
-		var result = VTMParameters[];
-		class = object.class;
-		testClass = this.findTestClass(class);
-		//omit name
-		object.description.keysValuesDo({arg attrKey, attrVal;
-			//"Object attr '%' - %".format(attrKey, attrVal).debug;
-		});
 	}
 
 	*generateRandomDeclaration{arg params;
@@ -75,17 +82,19 @@ TestVTMData : VTMUnitTest {
 			var testName;
 			var obj;
 			var testClass;
-			var parameters = VTMOrderedIdentityDictionary.new;
+			var parameters;
+			var declaration;
 			testClass = this.class.findTestClass(class);
-			class.mandatoryParameters.do({arg it;
-				parameters.put(
-					it,
-					testClass.generateRandomParameter(it)
-				);
-			});
-			testName = parameters.removeAt(\name);
+			//only test using mandatory parameters
+			parameters = testClass.generateRandomParameters(
+				class.mandatoryParameters
+			);
+			testName = testClass.generateRandomSymbol;
+			declaration = parameters.deepCopy;
 			try{
-				obj = class.new(testName, parameters);
+				"testName: % declaration: %".format(
+				testName, declaration).postln;
+				obj = class.new(testName, declaration);
 				this.passed(thisMethod,
 					"[%] - Made default Data object"
 					.format(class)
@@ -95,24 +104,16 @@ TestVTMData : VTMUnitTest {
 					"[%] - Failed to make default Data object: %"
 					.format(class, err.errorString);
 				);
+				err.postProtectedBacktrace;
 			};
 		});
 	}
 
-	test_init{
+	test_initName{
 		var obj, testParameters, managerObj;
 		this.class.classesForTesting.do({arg class;
 			var testClass = VTMUnitTest.findTestClass(class);
 			var testName = VTMUnitTest.generateRandomSymbol;
-			var managerClass = class.managerClass;
-			//managerClass shouldn not be nil
-			this.assert(managerClass.notNil,
-				"[%] - found manager class for test class".format(class)
-			);
-			managerObj = managerClass.new;
-			this.assert(managerObj.notNil,
-				"[%] - made manager obj for test class".format(class)
-			);
 
 			testParameters = testClass.generateRandomParameters;
 			//"Making with these parameters: %".format(testParameters).debug;
@@ -132,26 +133,46 @@ TestVTMData : VTMUnitTest {
 			);
 
 			obj.free;
+		});
+	}
 
-			//Trying to do with manager
-			testParameters = testClass.generateRandomParameters;
-			obj = class.new(
-				testName,
-				testParameters,
-				managerObj
+	test_addToManager{
+		var obj, testParameters, managerObj;
+		this.class.classesForTesting.do({arg class;
+			var testClass = VTMUnitTest.findTestClass(class);
+			var testName = VTMUnitTest.generateRandomSymbol;
+			var managerClass = class.managerClass;
+			//managerClass shouldn not be nil
+			this.assert(managerClass.notNil,
+				"[%] - found manager class for test class".format(class)
+			);
+			managerObj = managerClass.new;
+			this.assert(managerObj.notNil,
+				"[%] - made manager obj for test class".format(class)
 			);
 
-			// //check if name initialized
-			this.assertEquals(
-				obj.name,
+			testParameters = testClass.generateRandomParameters;
+
+			testName = VTMUnitTest.generateRandomSymbol;
+			obj = class.new(
 				testName,
-				"[%] - init 'name' correctly".format(class)
+				testParameters
+			);
+
+			//Add it to a manager
+			managerObj.addItem(obj);
+			//
+			//Should now be added to the manager items
+			this.assert(
+				managerObj.hasItemNamed(obj.name)
+				and: {managerObj[obj.name] === obj},
+				"[%] Manager added the data object".format(class)
 			);
 
 			//the manager object must be identical
 			this.assert(
-				obj.manager.notNil and: { obj.manager === managerObj},
-				"[%] - init 'manager' correctly".format(class)
+				 obj.manager === managerObj,
+				"[%] - data got the manager updated".format(class)
 			);
 
 			obj.free;
@@ -159,14 +180,14 @@ TestVTMData : VTMUnitTest {
 			//Should now be removed from the manager
 			this.assert(
 				managerObj.hasItemNamed(obj.name).not,
-				"Manager reomved the freed object."
+				"Manager removed the freed object."
 			);
 			managerObj.free;
 		});
 	}
-
-
-	//Test OSC communication with components
-	test_ParameterOSC{}
-
+	//
+	//
+	//	//Test OSC communication with components
+	//	test_ParameterOSC{}
+	//
 }
