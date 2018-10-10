@@ -1,7 +1,7 @@
 TestVTMValue : VTMUnitTest {
 	*classesForTesting{
 		^[
-			//VTMNoneValue,
+			VTMNoneValue,
 			VTMDecimalValue,
 			VTMIntegerValue,
 			// VTMTimecodeValue,
