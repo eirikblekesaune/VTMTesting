@@ -23,9 +23,10 @@ TestVTMElement : TestVTMData {
 			testDeclaration = testClass.generateRandomParameters;
 			obj = class.new(
 				testName,
-				testDeclaration,
-				managerObj
+				testDeclaration
 			);
+
+			managerObj.addItem(obj);
 
 			//should be the manager fullPath
 			this.assert(obj.path.notNil,
@@ -42,8 +43,11 @@ TestVTMElement : TestVTMData {
 			this.assertEquals(
 				obj.fullPath,
 				"%%%".format(
-					managerObj.path ++ managerObj.leadingSeparator ++ managerObj.name ++
-					obj.leadingSeparator ++ obj.name
+					managerObj.path
+						++ managerObj.leadingSeparator
+						++ managerObj.name
+						++ obj.leadingSeparator
+						++ obj.name
 				).asSymbol,
 				"[%] - fullPath is correct".format(class);
 			);
