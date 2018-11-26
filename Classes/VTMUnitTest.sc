@@ -207,4 +207,151 @@ VTMUnitTest : UnitTest {
 		});
 		^result;
 	}
+
+	*makeUML{arg outputFilepath;
+		var path = outputFilepath ?? {"~/Desktop/test.dot".standardizePath};
+		var dotfile;
+		var vtmClasses;
+		var escapeChars = {arg str;
+			var result = str;
+			[$\\, $", $>, $<, $|].do({arg it;
+				result = result.escapeChar(it);
+			});
+			result;
+		};
+
+		var getInstVarDotString = {arg cls;
+			var result;
+			cls.classVarNames.do({arg instVarName;
+				result = result ++ "% %\\l".format(
+					"*", //getset
+					instVarName
+				);
+			});
+			// cls.privateInstVars.do({arg instVarName;
+			// 	result = result ++ "% %\\l".format(
+			// 		"-", //getset
+			// 		instVarName
+			// 	);
+			// });
+
+			cls.instVars.do({arg instVarName;
+				result = result ++ "% %\\l".format(
+					"-", //getset
+					instVarName
+				);
+			});
+			result;
+		};
+		var getMethodDotStringForClass = {arg cls;
+			var result;
+			cls.class.methods.do({arg it;
+				var args = "";
+				if(it.argNames.size > 1, {
+					args = it.argumentString;
+				});
+				result = result ++ "* %( % )\\l".format(
+					escapeChars.value(it.name.asString),
+					escapeChars.value(args)
+				);
+				escapeChars.value(result);
+			});
+
+			cls.methods.reject({arg it;
+				it.hasCorrespondingInstVar;
+			}).do({arg it;
+				var args = "";
+				if(it.argNames.size > 1, {
+					args = it.argumentString;
+				});
+				result = result ++ "%( % )%%\\l".format(
+					escapeChars.value(it.name.asString),
+					escapeChars.value(args),
+					if(it.isOverridingSuperclass, {
+						" @overrides %".format(it.findOverriddenMethod.ownerClass.name)
+					}, {
+						"";
+					}),
+					if(it.isExtensionMethod, {
+						" @extension"
+					}, {
+						"";
+					})
+				);
+			});
+			result;
+		};
+
+		vtmClasses = Class.allClasses.select({arg item; "VTM".matchRegexp(item.name.asString)}).reject(_.isMetaClass);
+		{
+			var vtmFolder = PathName("~/github/blacksound/VTM/Classes".standardizePath);
+			var vtmTestFolder = PathName("~/github/blacksound/VTMTesting/Classes".standardizePath);
+			vtmClasses = Class.allClasses.select({arg class;
+				var path = PathName(class.filenameSymbol.asString);
+				vtmFolder.fullPath.matchRegexp(path.fullPath.asString) or: {
+					vtmTestFolder.fullPath.matchRegexp(path.fullPath.asString)
+				};
+			}).reject(_.isMetaClass);
+		}.value;
+
+		dotfile = File.new(path, "w");
+
+
+		if(dotfile.isOpen.not, {
+			"Failed opening file".error.throw;
+		});
+		dotfile << "digraph G {" << "\n";
+		dotfile << "\tfontname = \"Bitstream Vera Sans\"" << "\n";
+		dotfile << "\tfontsize = 8" << "\n";
+		dotfile << "\n";
+		dotfile << "\trankdir = \"LR\"\n";
+		dotfile << "\tnode [" << "\n";
+		dotfile << "\t\tfontname = \"Bitstream Vera Sans\"" << "\n";
+		dotfile << "\t\tfontsize = 8" << "\n";
+		dotfile << "\t\tshape = \"record\"" << "\n";
+		dotfile << "\t]" << "\n";
+		dotfile << "\n";
+		dotfile << "\tedge [" << "\n";
+		dotfile << "\t\tfontname = \"Bitstream Vera Sans\"" << "\n";
+		dotfile << "\t\tfontsize = 8" << "\n";
+		dotfile << "\t]" << "\n";
+		dotfile << "\n";
+		vtmClasses.do({arg class;
+			{arg cls;
+				dotfile << "\t% [".format(class.name) << "\n";
+				dotfile << "\t\tlabel = ";
+				dotfile << "\"{%|%|%}\"".format(
+					class.name,
+					getInstVarDotString.value(cls),
+					getMethodDotStringForClass.value(cls)
+				);
+				dotfile << "\n";
+				dotfile << "\t]" << "\n";
+			}.value(class);
+		});
+		//draw connections
+		vtmClasses.do({arg class;
+			if(vtmClasses.includes(class.superclass), {
+				dotfile << "% -> % [dir=back]\n".format(class.superclass.name, class.name).postln;
+			});
+		});
+
+		dotfile << "}" << "\n";
+
+		"DONE".postln;
+		dotfile.close();
+		while({dotfile.isOpen}, {
+			".".post;
+		});
+		"/usr/local/bin/dot % -Tpdf -O".format(path).unixCmd({arg returnCode ...args;
+			var imgPath;
+			if(returnCode != 0, {
+				"Error running 'dot' program".warn;
+			}, {
+				imgPath = path ++ ".pdf";
+				"open %".format(imgPath).postln.unixCmd;
+
+			});
+		});
+	}
 }
