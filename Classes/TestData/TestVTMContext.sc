@@ -80,7 +80,6 @@ TestVTMContext : TestVTMElement {
 		});
 	}
 
-
 	test_MakesDefaultPath {
 		this.class.classesForTesting.do({arg classToTest;
 			var context, testName, managerObj;
@@ -98,7 +97,29 @@ TestVTMContext : TestVTMElement {
 		});
 	}
 
-	//
+	test_AddControlsFromDefinition{
+		this.class.classesForTesting.do({arg classToTest;
+			var obj, testName;
+			var context;
+			var declaration;
+			var definition;
+			var controls;
+			testName = this.class.generateRandomSymbol;
+			definition = Environment.make({
+				~controls = [
+					\aaa -> (mode: \attribute, type: \integer)
+				];
+			});
+			try{
+				obj = classToTest.new(testName, definition: definition);
+				this.passed(thisMethod, "OK when making with controls in definition");
+			} {
+				this.failed(thisMethod, "Error when making with controls in definition");
+			};
+			obj.free;
+		});
+	}
+
 	// test_NewAndInitWithDeclaration{
 	// 	var context, testName;
 	// 	var declaration;
@@ -109,10 +130,13 @@ TestVTMContext : TestVTMElement {
 	// 	testName = this.class.generateRandomString.asSymbol;
 	// 	definition = Environment[];
 	// 	paramsAttr = TestVTMParameterManager.makeTestDeclaration;
-	// 	commandsAttr = TestVTMCommandManager.generateRandomDeclaration(paramsAttr);
-	// 	mappingsAttr = TestVTMMappingManager.generateRandomDeclaration(paramsAttr, commandsAttr);
+	// 	commandsAttr = TestVTMCommandManager.generateRandomDeclaration(
+	// 	paramsAttr);
+	// 	mappingsAttr = TestVTMMappingManager.generateRandomDeclaration(
+	// 	paramsAttr, commandsAttr);
 	//
-	// 	cuesAttr = TestVTMCueManager.generateRandomDeclaration(paramsAttr, commandsAttr);
+	// 	cuesAttr = TestVTMCueManager.generateRandomDeclaration(
+	// 	paramsAttr, commandsAttr);
 	// 	scoresAttr = TestVTMScoreManager.generateRandomDeclaration(
 	// 		paramsAttr, commandsAttr, mappingsAttr, cuesAttr
 	// 	);

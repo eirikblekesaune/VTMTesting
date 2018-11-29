@@ -185,9 +185,4 @@ TestVTMData : VTMUnitTest {
 			managerObj.free;
 		});
 	}
-	//
-	//
-	//	//Test OSC communication with components
-	//	test_ParameterOSC{}
-	//
 }
