@@ -35,13 +35,7 @@ VTMUnitTest : UnitTest {
 		})
 	}
 
-	setUp{
-		"Setting up a VTMTest".postln;
-	}
-
 	tearDown{
-		"Tearing down a VTMTest".postln;
-
 		//This checks if any Responders have not been removed.
 		if(this.class.checkFreeingResponderFuncs, {
 			if(AbstractResponderFunc.allFuncProxies.isEmpty.not, {
