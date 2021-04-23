@@ -39,4 +39,43 @@ TestVTMValueMapping : VTMUnitTest {
 		this.assertEquals(source.value, 1);
 	}
 
+	test_pushToDestination{
+		var source, destination, mapping;
+		source = VTMValue.integer(
+			(minVal: 0, maxVal: 10)
+		);
+		destination = VTMValue.integer(
+			(minVal: 0, maxVal: 100)
+		);
+
+		mapping = VTMValueMapping((
+			source: source,
+			destination: destination,
+			type: \bind
+		));
+		source.value = 5;
+		mapping.enable;
+		mapping.pushToDestination;
+		this.assertEquals(destination.value, 50);
+	}
+
+	test_pullFromDestination{
+		var source, destination, mapping;
+		source = VTMValue.integer(
+			(minVal: 0, maxVal: 10)
+		);
+		destination = VTMValue.integer(
+			(minVal: 0, maxVal: 100)
+		);
+
+		mapping = VTMValueMapping((
+			source: source,
+			destination: destination,
+			type: \bind
+		));
+		destination.value = 50;
+		mapping.enable;
+		mapping.pullFromDestination;
+		this.assertEquals(source.value, 5);
+	}
 }
