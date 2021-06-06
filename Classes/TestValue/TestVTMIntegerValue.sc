@@ -12,6 +12,10 @@ TestVTMIntegerValue : TestVTMNumberValue {
 		"Tearing down a VTMIntegerValueTest".postln;
 	}
 
+	test_DefaultProperties{
+
+	}
+
 	test_ConvertDecimalNumbersToInteger{
 		var testValue;
 		var desc = (

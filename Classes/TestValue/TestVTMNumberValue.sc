@@ -43,13 +43,13 @@ TestVTMNumberValue : TestVTMValue {
 			this.assertEquals(
 				valueObj.clipmode, \none, "NumberValue clipmode defaults to 'none'"
 			);
-			//minVal should default to nil (this might change later)
+			//minVal should default from class method value
 			this.assert(
-				valueObj.minVal.isNil, "NumberValue minVal defaults to nil"
+				valueObj.minVal.notNil, "NumberValue minVal defaults to nil"
 			);
-			//maxVal should default to nil (this might change later)
+			//maxVal should default to from class method value
 			this.assert(
-				valueObj.maxVal.isNil, "NumberValue maxVal defaults to nil"
+				valueObj.maxVal.notNil, "NumberValue maxVal defaults to nil"
 			);
 			valueObj.free;
 		});
