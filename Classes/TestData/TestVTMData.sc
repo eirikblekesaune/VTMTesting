@@ -139,50 +139,58 @@ TestVTMData : VTMUnitTest {
 	test_addToManager{
 		var obj, testParameters, managerObj;
 		this.class.classesForTesting.do({arg class;
-			var testClass = VTMUnitTest.findTestClass(class);
-			var testName = VTMUnitTest.generateRandomSymbol;
-			var managerClass = class.managerClass;
-			//managerClass shouldn not be nil
-			this.assert(managerClass.notNil,
-				"[%] - found manager class for test class".format(class)
-			);
-			managerObj = managerClass.new;
-			this.assert(managerObj.notNil,
-				"[%] - made manager obj for test class".format(class)
-			);
+			try{
+				var testClass = VTMUnitTest.findTestClass(class);
+				var testName = VTMUnitTest.generateRandomSymbol;
+				var managerClass = class.managerClass;
+				//managerClass shouldn not be nil
+				this.assert(managerClass.notNil,
+					"[%] - found manager class for test class".format(class)
+				);
+				managerObj = managerClass.new;
+				this.assert(managerObj.notNil,
+					"[%] - made manager obj for test class".format(class)
+				);
 
-			testParameters = testClass.generateRandomParameters;
+				testParameters = testClass.generateRandomParameters;
 
-			testName = VTMUnitTest.generateRandomSymbol;
-			obj = class.new(
-				testName,
-				testParameters
-			);
+				testName = VTMUnitTest.generateRandomSymbol;
+				"AAA".postln;
+				obj = class.new(
+					testName,
+					testParameters
+				);
+				"BBB".postln;
 
-			//Add it to a manager
-			managerObj.addItem(obj);
-			//
-			//Should now be added to the manager items
-			this.assert(
-				managerObj.hasItemNamed(obj.name)
-				and: {managerObj[obj.name] === obj},
-				"[%] Manager added the data object".format(class)
-			);
+				//Add it to a manager
+				managerObj.addItem(obj);
+				"CCC".postln;
+				//
+				//Should now be added to the manager items
+				this.assert(
+					managerObj.hasItemNamed(obj.name)
+					and: {managerObj[obj.name] === obj},
+					"[%] Manager added the data object".format(class)
+				);
 
-			//the manager object must be identical
-			this.assert(
-				 obj.manager === managerObj,
-				"[%] - data got the manager updated".format(class)
-			);
+				//the manager object must be identical
+				this.assert(
+					obj.manager === managerObj,
+					"[%] - data got the manager updated".format(class)
+				);
 
-			obj.free;
+				obj.free;
 
-			//Should now be removed from the manager
-			this.assert(
-				managerObj.hasItemNamed(obj.name).not,
-				"Manager removed the freed object."
-			);
-			managerObj.free;
+				//Should now be removed from the manager
+				this.assert(
+					managerObj.hasItemNamed(obj.name).not,
+					"Manager removed the freed object."
+				);
+				managerObj.free;
+			} {|err|
+				err.dumpDetailedBackTrace;
+				this.failed(thisMethod, "Failed for %".format(class));
+			}
 		});
 	}
 }
